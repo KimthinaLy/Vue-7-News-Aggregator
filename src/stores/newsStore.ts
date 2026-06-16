@@ -5,12 +5,31 @@ export const useNewsStore = defineStore('news', () => {
   const currentPage = ref(1)
   const pageSize: number = 10
   const totalResult = ref(0)
-  const articals = ref([])
+  const articles = ref([])
   const searchQuery = ref('')
+  const loading = ref(true)
+  const error = ref<string | null>(null)
 
   const totalPages = computed(() => Math.ceil(totalResult.value / pageSize))
 
-  function fetchArticals() {}
+  async function fetchArticles() {
+    const url: string = ''
+    try {
+      loading.value = true
+      const response = await fetch(url)
+      if (response.ok) {
+        const data = await response.json()
+        totalResult.value = data.totalArticles
+        articles.value = data.articles
+      } else {
+        error.value = `Error: ${response.status} ${response.statusText}`
+      }
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : 'Unknown error'
+    } finally {
+      loading.value = false
+    }
+  }
 
   function nextPage() {
     if (currentPage.value < totalPages.value) {
@@ -24,5 +43,15 @@ export const useNewsStore = defineStore('news', () => {
     }
   }
 
-  return { currentPage, pageSize, totalPages, searchQuery, fetchArticals, nextPage, prevPage }
+  return {
+    currentPage,
+    pageSize,
+    totalPages,
+    searchQuery,
+    fetchArticles,
+    nextPage,
+    prevPage,
+    loading,
+    error,
+  }
 })
