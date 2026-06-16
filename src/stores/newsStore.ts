@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
+const API_KEY = import.meta.env.VITE_GNEWS_API_KEY
+
 export const useNewsStore = defineStore('news', () => {
   const currentPage = ref(1)
   const pageSize: number = 10
@@ -13,7 +15,7 @@ export const useNewsStore = defineStore('news', () => {
   const totalPages = computed(() => Math.ceil(totalResult.value / pageSize))
 
   async function fetchArticles() {
-    const url: string = ''
+    const url = `https://gnews.io/api/v4/search?q=${searchQuery.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
     try {
       loading.value = true
       const response = await fetch(url)
