@@ -9,15 +9,24 @@ export const useNewsStore = defineStore('news', () => {
   const totalResult = ref(0)
   const articles = ref([])
   const searchQuery = ref('')
-  const loading = ref(true)
+  const loading = ref(false)
   const error = ref<string | null>(null)
+  const category = ref('general')
 
   const totalPages = computed(() => Math.ceil(totalResult.value / pageSize))
 
   async function fetchArticles() {
-    const url = `https://gnews.io/api/v4/search?q=${searchQuery.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
+    const urlSearchQuery = `https://gnews.io/api/v4/search?q=${searchQuery.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
+    const urlCategoryQuery = `https://gnews.io/api/v4/top-headlines?category=${category.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
     try {
       loading.value = true
+      let url: string = ''
+      if (searchQuery.value === '') {
+        url = urlCategoryQuery
+      } else {
+        url = urlSearchQuery
+      }
+
       const response = await fetch(url)
       if (response.ok) {
         const data = await response.json()
@@ -55,5 +64,6 @@ export const useNewsStore = defineStore('news', () => {
     prevPage,
     loading,
     error,
+    category,
   }
 })
