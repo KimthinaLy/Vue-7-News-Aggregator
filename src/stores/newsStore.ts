@@ -1,3 +1,4 @@
+import type { Article } from '@/types/article'
 import { defineStore } from 'pinia'
 import { ref, computed, watch } from 'vue'
 
@@ -7,7 +8,7 @@ export const useNewsStore = defineStore('news', () => {
   const currentPage = ref(1)
   const pageSize: number = 10
   const totalResult = ref(0)
-  const articles = ref([])
+  const articles = ref<Article[]>([])
   const searchQuery = ref('')
   const loading = ref(false)
   const error = ref<string | null>(null)
@@ -66,6 +67,7 @@ export const useNewsStore = defineStore('news', () => {
     currentPage,
     pageSize,
     totalPages,
+    articles,
     searchQuery,
     fetchArticles,
     nextPage,
