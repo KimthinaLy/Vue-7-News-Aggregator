@@ -7,7 +7,9 @@ const routes = [
   { path: '/news/:id', name: 'news-detail', component: DetailsPage },
 ]
 
-export const router = createRouter({
+const router = createRouter({
   history: createMemoryHistory(),
   routes,
 })
+
+export default router

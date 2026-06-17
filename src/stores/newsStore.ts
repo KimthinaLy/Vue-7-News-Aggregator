@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const API_KEY = import.meta.env.VITE_GNEWS_API_KEY
 
@@ -14,6 +14,14 @@ export const useNewsStore = defineStore('news', () => {
   const category = ref('general')
 
   const totalPages = computed(() => Math.ceil(totalResult.value / pageSize))
+
+  watch([searchQuery, category], () => {
+    currentPage.value = 1
+  })
+
+  watch(currentPage, () => {
+    fetchArticles()
+  })
 
   async function fetchArticles() {
     const urlSearchQuery = `https://gnews.io/api/v4/search?q=${searchQuery.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
