@@ -3,6 +3,8 @@ import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNewsStore } from '@/stores/newsStore';
 import { useDebounce } from '@/composables/useDebounce';
+import type { Article } from '@/types/article';
+import { useRouter } from 'vue-router';
 
 defineOptions({
     name: 'ResultPage'
@@ -12,6 +14,8 @@ const cats = ['science', 'sports', 'technology', 'world', 'business', 'health', 
 
 const newsStore = useNewsStore()
 const { searchQuery, error, loading, articles, currentPage, totalPages } = storeToRefs(newsStore) //because pinia auto-unwraps refs when access via the store object
+
+const router = useRouter()
 
 onMounted(() => {
     newsStore.fetchArticles()
@@ -29,6 +33,11 @@ watch(debouncedQuery, () => {
     newsStore.category = ''
 })
 
+function goToArticle(article: Article) {
+    newsStore.selectedArticle = article
+    router.push({ name: 'news-detail' })
+}
+
 </script>
 <template>
     <div>
@@ -44,14 +53,12 @@ watch(debouncedQuery, () => {
     <div v-if="loading">Loading...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else>
-        <div v-for="a in articles" :key="a.url">
+        <div v-for="a in articles" :key="a.url" @click="goToArticle(a)">
             <h3>{{ a.title }}</h3>
-            <img :src=a.image />
+            <img :src="a.image" />
             <p class="truncate-single">{{ a.description }}</p>
             <p class="truncate-multi">{{ a.content }}</p>
             <p>{{ a.publishedAt }}</p>
-            <p>{{ a.source.name }}</p>
-            <p>{{ a.source.url }}</p>
         </div>
 
         <button @click="newsStore.prevPage()">Previous</button>

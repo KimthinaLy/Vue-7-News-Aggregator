@@ -13,6 +13,7 @@ export const useNewsStore = defineStore('news', () => {
   const loading = ref(false)
   const error = ref<string | null>(null)
   const category = ref('general')
+  const selectedArticle = ref<Article | null>(null)
 
   const totalPages = computed(() => Math.ceil(totalResult.value / pageSize))
 
@@ -75,5 +76,6 @@ export const useNewsStore = defineStore('news', () => {
     loading,
     error,
     category,
+    selectedArticle,
   }
 })
