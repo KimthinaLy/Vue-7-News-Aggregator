@@ -1,42 +1,69 @@
-# vue-phase3-2-news-aggregator
+# News Aggregator
 
-This template should help get you started developing with Vue 3 in Vite.
+A news browsing app built with Vue 3 and TypeScript — created to practice state management and performance patterns by building something real.
 
-## Recommended IDE Setup
+---
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## About
 
-## Recommended Browser Setup
+News Aggregator lets you browse headlines by category and search by keyword, powered by the GNews API. Results update as you type, navigation preserves your place, and pagination keeps the feed manageable.
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+**Why I built this:** I'm learning Vue by doing — not just reading docs. This project covers debounced search, Pinia store design, `<keep-alive>` for navigation state, and composable patterns in a practical context.
 
-## Type Support for `.vue` Imports in TS
+---
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## Tech Stack
 
-## Customize configuration
+| Tool       | Version |
+| ---------- | ------- |
+| Vue        | 3       |
+| TypeScript | 5       |
+| Vite       | 5       |
+| Pinia      | 2       |
+| GNews API  | free    |
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+---
 
-## Project Setup
+## Setup
 
-```sh
+**Requirements:**
+
+- Node.js 18+
+- VS Code with [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) extension
+- A free GNews API key from [gnews.io](https://gnews.io)
+
+**Install and run:**
+
+```bash
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+**Environment variables:**
 
-```sh
-npm run build
+Create a `.env` file in the project root:
+
 ```
+VITE_GNEWS_API_KEY=your_key_here
+```
+
+---
+
+## Features
+
+- Browse headlines by category — science, sports, technology, business, health, entertainment, world
+- Search by keyword with 500ms debounced input — no unnecessary API calls while typing
+- Pagination with previous/next controls and "page X of Y" display
+- Article detail page — click any headline to read more
+- Back navigation preserves list state — same category, search, and page
+- Loading and error states handled throughout
+- Reusable `useDebounce()` composable for any future project
+
+---
+
+## Key Concepts Practiced
+
+- **Debounced search** — `useDebounce` composable wraps a ref and delays its update using `setTimeout` and `clearTimeout`
+- **Pinia store** — single source of truth for articles, pagination, search query, category, loading, and error state
+- **`<keep-alive>`** — caches the `ResultPage` component so returning from an article doesn't trigger a refetch
+- **Smart URL switching** — `fetchArticles` uses the `/top-headlines` endpoint for category browsing and `/search` for keyword queries
