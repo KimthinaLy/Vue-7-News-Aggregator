@@ -8,10 +8,10 @@ defineOptions({
     name: 'ResultPage'
 })
 
-const cats = ['science', 'sports', 'technology', 'world', 'business', 'health', 'entertainment']
+const cats = ['science', 'sports', 'technology', 'world', 'business', 'health', 'entertainment',]
 
 const newsStore = useNewsStore()
-const { searchQuery, error, loading, articles } = storeToRefs(newsStore) //because pinia auto-unwraps refs when access via the store object
+const { searchQuery, error, loading, articles, currentPage, totalPages } = storeToRefs(newsStore) //because pinia auto-unwraps refs when access via the store object
 
 onMounted(() => {
     newsStore.fetchArticles()
@@ -46,11 +46,31 @@ watch(debouncedQuery, () => {
     <div v-else>
         <div v-for="a in articles" :key="a.url">
             <h3>{{ a.title }}</h3>
-            <p>{{ a.description }}</p>
-            <p>{{ a.content }}</p>
+            <img :src=a.image />
+            <p class="truncate-single">{{ a.description }}</p>
+            <p class="truncate-multi">{{ a.content }}</p>
             <p>{{ a.publishedAt }}</p>
             <p>{{ a.source.name }}</p>
             <p>{{ a.source.url }}</p>
         </div>
+
+        <button @click="newsStore.prevPage()">Previous</button>
+        <span>{{ currentPage }} of {{ totalPages }}</span>
+        <button @click="newsStore.nextPage()">Next</button>
     </div>
 </template>
+
+<style scoped>
+.truncate-single {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.truncate-multi {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>

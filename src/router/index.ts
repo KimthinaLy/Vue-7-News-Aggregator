@@ -1,14 +1,14 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
-import ResultsPage from '@/pages/DetailPage.vue'
-import DetailsPage from '@/pages/DetailPage.vue'
+import { createWebHashHistory, createRouter } from 'vue-router'
+import ResultPage from '@/pages/ResultPage.vue'
+import DetailPage from '@/pages/DetailPage.vue'
 
 const routes = [
-  { path: '/news', name: 'news', component: ResultsPage },
-  { path: '/news/:id', name: 'news-detail', component: DetailsPage },
+  { path: '/', name: 'news', component: ResultPage },
+  { path: '/news/:id', name: 'news-detail', component: DetailPage },
 ]
 
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHashHistory(),
   routes,
 })
 
