@@ -21,17 +21,15 @@ export const useNewsStore = defineStore('news', () => {
     currentPage.value = 1
   })
 
-  watch(currentPage, () => {
-    fetchArticles()
-  })
-
   async function fetchArticles() {
-    const urlSearchQuery = `https://gnews.io/api/v4/search?q=${searchQuery.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
-    const urlCategoryQuery = `https://gnews.io/api/v4/top-headlines?category=${category.value}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
+    const query = searchQuery.value.trim()
+    const activeCategory = category.value || 'general'
+    const urlSearchQuery = `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
+    const urlCategoryQuery = `https://gnews.io/api/v4/top-headlines?category=${activeCategory}&page=${currentPage.value}&max=${pageSize}&apikey=${API_KEY}`
     try {
       loading.value = true
       let url: string = ''
-      if (searchQuery.value === '') {
+      if (query === '') {
         url = urlCategoryQuery
       } else {
         url = urlSearchQuery
@@ -55,12 +53,14 @@ export const useNewsStore = defineStore('news', () => {
   function nextPage() {
     if (currentPage.value < totalPages.value) {
       currentPage.value += 1
+      fetchArticles()
     }
   }
 
   function prevPage() {
     if (currentPage.value > 1) {
       currentPage.value -= 1
+      fetchArticles()
     }
   }
 
